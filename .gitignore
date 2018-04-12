@@ -1,2 +1,6 @@
 .idea
 events.out.tfevents.*
+*.tsv
+*.png
+*.pbtxt
+*.ndarray
