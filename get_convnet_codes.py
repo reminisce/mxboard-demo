@@ -93,5 +93,5 @@ if __name__ == '__main__':
                 resized_images = mx.nd.concat(*[resized_images, resized_image], dim=0)
         logging.info('collected %d images and convnet codes so far' % num_images)
         mx.nd.waitall()
-    mx.nd.save('%s_convnet_codes.ndarray' % args.model, convnet_codes)
-    mx.nd.save('%s_resized_images.ndarray' % args.model, resized_images)
+    mx.nd.save('./data/%s_convnet_codes.ndarray' % args.model, convnet_codes)
+    mx.nd.save('./data/%s_resized_images.ndarray' % args.model, resized_images)
