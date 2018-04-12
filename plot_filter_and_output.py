@@ -32,7 +32,9 @@ sw.add_image(tag='swan', image=swan.astype('uint8'))
 # plot conv filter and output of inception-bn
 weight = mx.nd.load('./data/inception_bn_conv_1_weight.param')[0]
 bias = mx.nd.load('./data/inception_bn_conv_1_bias.param')[0]
-out = mx.nd.Convolution(swan, weight=weight, bias=bias, kernel=weight.shape[2:], num_filter=weight.shape[0])
+mean_rgb = mx.nd.array([123.68, 116.779, 103.939])
+mean_rgb = mean_rgb.reshape((1, 3, 1, 1))
+out = mx.nd.Convolution(swan-mean_rgb, weight=weight, bias=bias, kernel=weight.shape[2:], num_filter=weight.shape[0])
 out = out.transpose((1, 0, 2, 3))
 tag = 'test_weight'
 sw.add_image(tag='inception_bn_conv_1_weight', image=rescale_per_image(weight))
