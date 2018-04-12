@@ -23,7 +23,7 @@ def rescale_per_image(x):
     return x
 
 
-sw = SummaryWriter(logdir='/Users/jwum/Development/sandbox/logs')
+sw = SummaryWriter(logdir='./logs')
 
 swan = mx.nd.load('./data/imagenet_swan.ndarray')[0]
 swan = swan.reshape((1,) + swan.shape).astype('float32')
