@@ -3,6 +3,8 @@
 
 ![inception_bn_conv_1_output](https://github.com/reminisce/mxboard-demo/blob/master/pic/inception_bn_conv_1_output.png =250x250)
 
+<a href='url>
 <img src="https://github.com/reminisce/mxboard-demo/blob/master/pic/inception_bn_conv_1_weight.png" height="250" width="250>
+</a>
 
 ![inception_bn_conv_1_output](https://github.com/reminisce/mxboard-demo/blob/master/pic/inception_bn_conv_1_output.png | width=250)
