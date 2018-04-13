@@ -21,7 +21,7 @@ def download_model(model_name):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate a calibrated quantized model from a FP32 model')
     parser.add_argument('--max-num-images', type=int, default=2304, help='max-num-images-collected')
-    parser.add_argument('--model', type=str, default='imagenet1k-inception-bn',
+    parser.add_argument('--model', type=str, default='imagenet1k-resnet-152',
                         choices=['imagenet1k-resnet-152', 'imagenet1k-inception-bn'],
                         help='currently only supports imagenet1k-resnet-152 or imagenet1k-inception-bn')
     args = parser.parse_args()
@@ -67,6 +67,7 @@ if __name__ == '__main__':
     num_images = 0
     convnet_codes = None  # N * 1000
     resized_images = None  # NCHW
+    labels = None
     for batch in data:
         if num_images >= args.max_num_images:
             break
@@ -78,6 +79,10 @@ if __name__ == '__main__':
             convnet_codes = fc_output
         else:
             convnet_codes = mx.nd.concat(*[convnet_codes, fc_output], dim=0)
+        if labels is None:
+            labels = batch.label[0].copyto(mx.cpu(0))
+        else:
+            labels = mx.nd.concat(*[labels, batch.label[0]], dim=0)
         images = batch.data[0].copyto(mx.cpu(0))  # batch images in NCHW
         images = images.transpose((0, 2, 3, 1))  # batch images in NHWC
         images.wait_to_read()
@@ -95,3 +100,4 @@ if __name__ == '__main__':
         mx.nd.waitall()
     mx.nd.save('./data/%s_convnet_codes.ndarray' % args.model, convnet_codes)
     mx.nd.save('./data/%s_resized_images.ndarray' % args.model, resized_images)
+    mx.nd.save('./data/%s_labels.ndarray' % args.model, labels.astype('int32'))
