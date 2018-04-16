@@ -46,7 +46,7 @@ opt = parser.parse_args()
 
 # define network
 
-net = nn.Sequential()
+net = nn.HybridSequential()
 with net.name_scope():
     net.add(nn.Dense(128, activation='relu'))
     net.add(nn.Dense(64, activation='relu'))
@@ -83,6 +83,7 @@ def test(ctx):
 def train(epochs, ctx):
     # Collect all parameters from net and its children, then initialize them.
     net.initialize(mx.init.Xavier(magnitude=2.24), ctx=ctx)
+    net.hybridize()
 
     # Trainer is for updating parameters with gradient.
     trainer = gluon.Trainer(net.collect_params(), 'sgd',
@@ -127,6 +128,9 @@ def train(epochs, ctx):
             if i == 0:
                 sw.add_image('minist_first_minibatch', data.reshape((opt.batch_size, 1, 28, 28)), epoch)
 
+        if epoch == 0:
+            sw.add_graph(net)
+
         grads = [i.grad() for i in net.collect_params().values()]
         assert len(grads) == len(param_names)
         # logging the gradients of parameters for checking convergence
@@ -143,7 +147,6 @@ def train(epochs, ctx):
         print('[Epoch %d] Validation: %s=%f' % (epoch, name, val_acc))
         sw.add_scalar(tag='valid_acc', value=val_acc, global_step=epoch)
 
-    #net.save_params('mnist.params')
     sw.close()
 
 
