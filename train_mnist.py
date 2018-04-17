@@ -98,6 +98,7 @@ def train(epochs, ctx):
     # define a summary writer that logs data and flushes to the file every 5 seconds
     sw = SummaryWriter(logdir='./logs', flush_secs=5)
 
+    global_step = 0
     for epoch in range(epochs):
         # reset data iterator and metric at begining of epoch.
         metric.reset()
@@ -110,6 +111,8 @@ def train(epochs, ctx):
             with autograd.record():
                 output = net(data)
                 L = loss(output, label)
+            sw.add_scalar(tag='cross_entropy', value=L.mean().asscalar(), global_step=global_step)
+            global_step += 1
             L.backward()
 
             # take a gradient step with batch_size equal to data.shape[0]

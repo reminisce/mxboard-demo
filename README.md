@@ -59,8 +59,10 @@ for i, name in enumerate(param_names):
 ![mnist_params_histograms](https://github.com/reminisce/mxboard-demo/blob/master/pic/mnist_params_histograms.png)
 
 
-5. Plot training and validation accuracy curves.
+5. Plot cross entropy, training and validation accuracy curves.
 ```python
+sw.add_scalar(tag='cross_entropy', value=L.mean().asscalar(), global_step=global_step)
+
 name, acc = metric.get()
 print('[Epoch %d] Training: %s=%f' % (epoch, name, acc))
 # logging training accuracy
@@ -72,7 +74,7 @@ print('[Epoch %d] Validation: %s=%f' % (epoch, name, val_acc))
 sw.add_scalar(tag='valid_acc', value=val_acc, global_step=epoch)
 ```
 
-![train_valid_accuracy_curves](https://github.com/reminisce/mxboard-demo/blob/master/pic/train_valid_accuracy_curves.png)
+![train_valid_accuracy_curves](https://github.com/reminisce/mxboard-demo/blob/master/pic/mnist_loss_train_valid_curves.png)
 
 
 6. Remember to close the `SummaryWriter` once training finishes.
