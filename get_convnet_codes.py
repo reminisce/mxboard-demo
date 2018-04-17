@@ -24,6 +24,8 @@ if __name__ == '__main__':
     parser.add_argument('--model', type=str, default='imagenet1k-resnet-152',
                         choices=['imagenet1k-resnet-152', 'imagenet1k-inception-bn'],
                         help='currently only supports imagenet1k-resnet-152 or imagenet1k-inception-bn')
+    parser.add_argument('--ctx', type=str, default='gpu', choices=['gpu', 'cpu'],
+                        help='context used for running forward propogation to collect embedding data')
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO)
 
@@ -34,7 +36,10 @@ if __name__ == '__main__':
     fc_output_name = 'fc1_output'
     convnet_code_sym = sym.get_internals()[fc_output_name]
 
-    ctx = mx.gpu(0)
+    if args.ctx == 'gpu':
+        ctx = mx.gpu(0)
+    else:
+        ctx = mx.cpu(0)
     data_nthreads = 60
     batch_size = 8
     data_shape = (3, 224, 224)
