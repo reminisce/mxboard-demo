@@ -95,9 +95,6 @@ def train(epochs, ctx):
     params = net.collect_params()
     param_names = params.keys()
 
-    # define the number of bins for logging histograms
-    num_bins = 1000
-
     # define a summary writer that logs data and flushes to the file every 5 seconds
     sw = SummaryWriter(logdir='./logs', flush_secs=5)
 
@@ -135,7 +132,7 @@ def train(epochs, ctx):
         assert len(grads) == len(param_names)
         # logging the gradients of parameters for checking convergence
         for i, name in enumerate(param_names):
-            sw.add_histogram(tag=name, values=grads[i], global_step=epoch, bins=num_bins)
+            sw.add_histogram(tag=name, values=grads[i], global_step=epoch, bins=1000)
 
         name, acc = metric.get()
         print('[Epoch %d] Training: %s=%f' % (epoch, name, acc))

@@ -16,21 +16,21 @@ Let's borrow the script of training the MNIST model from the
 [Gluon example](https://github.com/apache/incubator-mxnet/blob/master/example/gluon/mnist.py)
 to monitor the training progress in TensorBoard. You can find the code in `train_mnist.py`.
 Note that here we define the network using `HybridSequential`,
-instead of `Sequential` as in the Gluon example. This is because that we want to plot
-the model graph in TensorBoard and MXBoard only accepts `HybridBlock`s for models built
+instead of `Sequential` as in the original Gluon example. This is because that we want to plot
+the graph in TensorBoard and MXBoard only accepts `HybridBlock`s for models built
 using Gluon interfaces.
 
-We would like to highlight the snippets in the `train()` function where MXBoard comes into play.
+In the following, we highlight the snippets in the `train()` function where MXBoard comes into play.
 1. Define a `SummaryWriter` object for writing MXNet data to event files under the `./logs`
-directory and flushing writes every five seconds in order to view them in TensorBoard
-in training.
+directory and flushing writes every five seconds in order to view updated results in TensorBoard
+promptly.
 ```python
 sw = SummaryWriter(logdir='./logs', flush_secs=5)
 ```
 
-2.  For the first batch of images of every epoch, display them in TensorBoard sequentially.
+2.  For the first mini-batch of images in every epoch, display them in TensorBoard sequentially.
 We want to verify that these images are different since we set
-`shuffle=True` in the `DataLoader` for the training dataset.
+`shuffle=True` in the `DataLoader` loading the training dataset.
 ```python
 if i == 0:  # i here represents the minibatch id
     sw.add_image('minist_first_minibatch', data.reshape((opt.batch_size, 1, 28, 28)), epoch)
@@ -38,7 +38,8 @@ if i == 0:  # i here represents the minibatch id
 
 ![mnist_image_samples](https://github.com/reminisce/mxboard-demo/blob/master/pic/mnist_image_samples.png)
 
-3. Plot the graph of the MNIST model.
+3. Plot the graph of the MNIST model. The model graph is available for logging once
+`net.hybridize()` and `net.forward()` execute.
 ```python
 if epoch == 0:
     sw.add_graph(net)
@@ -52,7 +53,7 @@ grads = [i.grad() for i in net.collect_params().values()]
 assert len(grads) == len(param_names)
 # logging the gradients of parameters for checking convergence
 for i, name in enumerate(param_names):
-    sw.add_histogram(tag=name, values=grads[i], global_step=epoch, bins=num_bins)
+    sw.add_histogram(tag=name, values=grads[i], global_step=epoch, bins=1000)
 ```
 
 ![mnist_params_histograms](https://github.com/reminisce/mxboard-demo/blob/master/pic/mnist_params_histograms.png)
@@ -74,7 +75,7 @@ sw.add_scalar(tag='valid_acc', value=val_acc, global_step=epoch)
 ![train_valid_accuracy_curves](https://github.com/reminisce/mxboard-demo/blob/master/pic/train_valid_accuracy_curves.png)
 
 
-6. Close the `SummaryWriter`.
+6. Remember to close the `SummaryWriter` once training finishes.
 ```python
 sw.close()
 ```
