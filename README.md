@@ -165,7 +165,7 @@ $ python plot_convnet_embedding.py
 ```
 to write embeddings into event files for visualization in TensorBoard.
 
-![imagenet_resnet_152_dog_cluster](https://github.com/reminisce/mxboard-demo/blob/master/pic/imagenet_resnet_152_dog_cluster.png)
+![imagenet_resnet_152_dog_cluster](https://github.com/reminisce/mxboard-demo/blob/master/pic/imagenet_resnet_152_dog_cluster.gif)
 
 
 # References
