@@ -143,6 +143,8 @@ Let's collapse the embeddings data into 3D space using t-SNE since it is known f
 of preserving local structures of object relationship.
 One can apply other pre-trained models to achieve the similar results as below.
 
+![](https://github.com/reminisce/mxboard-demo/blob/master/pic/embedding_t_sne_motion.gif)
+
 ![imagenet_resnet_152_embedding](https://github.com/reminisce/mxboard-demo/blob/master/pic/imagenet_resnet_152_embedding.png)
 
 On the top-right corner of the TensorBoard GUI, you can enter the object type to search for the matched
